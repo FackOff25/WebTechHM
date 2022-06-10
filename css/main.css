@@ -107,6 +107,30 @@ hr{
     border: 1px solid lightblue;
 }
 
+.new-question-form-block{
+    padding: 10px;
+}
+
+#questionText{
+    min-height: 400px;
+}
+
+.pagination-colors {
+
+  --bs-pagination-color: #508497;
+  --bs-pagination-hover-color: #508497;
+  --bs-pagination-focus-color: #508497;
+  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem #1f4e5e;
+  --bs-pagination-active-bg: #508497;
+  --bs-pagination-active-border-color: #508497;
+}
+
+.error{
+    color: red;
+    padding: 0 0 10px 0;
+}
+
+
 /*bootstrap example section*/
 .bd-placeholder-img {
     font-size: 1.125rem;
