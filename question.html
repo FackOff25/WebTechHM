@@ -29,11 +29,14 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
-
-                <form class="d-flex me-auto" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Ask!</button>
-                </form>
+                <div class="d-flex me-auto">
+                    <form class="me-2" role="search">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                    </form>
+                    <a href="newquestion.html">
+                        <button class="btn btn-outline-success" type="submit">Ask!</button>
+                    </a>
+                </div>
                 <ul class="navbar-nav mr-auto">
                     <img class="avatar-small-icon" src="statics/images/racoon.jpg">
 
@@ -41,7 +44,7 @@
                         <span class="my-name">Name</span>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Settings</a>
+                        <a class="nav-link" href="settings.html">Settings</a>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="#">Logout</a>
@@ -50,7 +53,7 @@
                         <a class="nav-link" href="login.html">Log in</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Register</a>
+                        <a class="nav-link" href="registration.html">Sign Up</a>
                     </li>
                 </ul>
             </div>
@@ -104,7 +107,7 @@
                             <div class="rating">15</div>
                             <div class="col-2 btn-group-vertical rate-buttons">
                                 <img type="button" class="rate-button" src="statics/images/arrow-up.png">
-                                <img type="button" class="rate-button" src="statics/images/arrow-down.png">
+                                <img type="button" class="rate-button" src="statics/images/arrow-down-pressed.png">
                             </div>
                         </div>
                     </div>
@@ -128,7 +131,7 @@
                         <div class="row-1 rating-box">
                             <div class="rating">15</div>
                             <div class="col-2 btn-group-vertical rate-buttons">
-                                <img type="button" class="rate-button" src="statics/images/arrow-up.png">
+                                <img type="button" class="rate-button" src="statics/images/arrow-up-pressed.png">
                                 <img type="button" class="rate-button" src="statics/images/arrow-down.png">
                             </div>
                         </div>
@@ -153,7 +156,7 @@
                     <div class="form-group your-answer-form-box">
                         <div>
                             <textarea class="form-control your-answer-form" rows="3" placeholder="Enter answer"></textarea>
-                            <small class="error">You can't send empty answer</small>
+                            <small class="error">You can't send an empty answer</small>
                         </div>
                         <button type="submit" class="btn btn-outline-success">Answer</button>
                     </div>
