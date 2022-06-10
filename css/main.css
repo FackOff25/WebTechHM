@@ -1,7 +1,8 @@
 main > .container {
     padding: 60px 15px 0;
 }
-.header-logo{
+
+.header-logo {
     height: available;
 }
 
@@ -33,7 +34,7 @@ main > .container {
     padding-left: var(--bs-navbar-nav-link-padding-x);
 }
 
-hr{
+hr {
     color: #508497;
 }
 
@@ -107,32 +108,38 @@ hr{
     border: 1px solid lightblue;
 }
 
-.new-question-form-block{
+.new-question-form-block {
     padding: 10px;
 }
 
-#questionText{
+#questionText {
     min-height: 400px;
 }
 
 .pagination-colors {
 
-  --bs-pagination-color: #508497;
-  --bs-pagination-hover-color: #508497;
-  --bs-pagination-focus-color: #508497;
-  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem #1f4e5e;
-  --bs-pagination-active-bg: #508497;
-  --bs-pagination-active-border-color: #508497;
+    --bs-pagination-color: #508497;
+    --bs-pagination-hover-color: #508497;
+    --bs-pagination-focus-color: #508497;
+    --bs-pagination-focus-box-shadow: 0 0 0 0.25rem #1f4e5e;
+    --bs-pagination-active-bg: #508497;
+    --bs-pagination-active-border-color: #508497;
 }
 
-.error{
+.error {
     color: red;
     padding: 0 0 10px 0;
 }
 
-#hot-question-label{
+#hot-question-label {
     margin: auto 0 .5rem 0;
 
+}
+
+.avatar-settings {
+    max-width: 300px;
+    height: 200px;
+    margin: 10px;
 }
 
 /*bootstrap example section*/
