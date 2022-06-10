@@ -1,6 +1,9 @@
 main > .container {
     padding: 60px 15px 0;
 }
+.header-logo{
+    height: available;
+}
 
 .btn-outline-success {
     --bs-btn-color: #508497;
