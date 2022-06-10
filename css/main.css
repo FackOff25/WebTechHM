@@ -143,6 +143,10 @@ hr {
     margin: 10px;
 }
 
+.newTag {
+    margin-right: 10px;
+}
+
 /*bootstrap example section*/
 .bd-placeholder-img {
     font-size: 1.125rem;
