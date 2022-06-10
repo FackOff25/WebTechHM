@@ -130,6 +130,10 @@ hr{
     padding: 0 0 10px 0;
 }
 
+#hot-question-label{
+    margin: auto 0 .5rem 0;
+
+}
 
 /*bootstrap example section*/
 .bd-placeholder-img {
