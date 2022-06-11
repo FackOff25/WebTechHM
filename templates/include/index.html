@@ -1,0 +1,20 @@
+{% extends "include/base.html" %}
+{% load static %}
+
+{% block content %}
+    <!--will be displayed one of-->
+    {% block theme %}
+    {% endblock theme %}
+    <!--this tags-->
+
+    {% for question in iterators %}
+        {% include "include/question.html" %}
+    {% endfor %}
+
+    {% include "include/paginator.html" %}
+{% endblock %}
+
+{% block side-panel %}
+    {% include "include/sidepanel.html" %}
+{% endblock %}
+

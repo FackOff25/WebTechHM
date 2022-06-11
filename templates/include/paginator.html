@@ -1,0 +1,21 @@
+<div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if iterators.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">First &laquo;</a></li>
+                <li class="page-item"><a class="page-link"
+                                         href="?page={{ iterators.previous_page_number }}">Previous</a></li>
+            {% endif %}
+
+            <span class="current">
+            <li class="page-item"><a class="page-link" href="?page={{ iterators.number }}">Page {{ iterators.number }}
+                                    of {{ iterators.paginator.num_pages }}</a></li>
+        </span>
+            {% if iterators.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ iterators.next_page_number }}">Next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ iterators.paginator.num_pages }}">Last
+                    &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>

@@ -1,0 +1,16 @@
+<div class="mt-3">
+    <div class="best-container row">
+        <h2>Tags</h2>
+        {% for tag in BestTags %}
+            <div class="newTag col-1"><a href="{% url "tag" tg=tag %}"><h5>{{ tag }}</h5></a></div>
+        {% endfor %}
+    </div>
+    <div class="best-container">
+        <h2>Best users</h2>
+        <ul class="list-group list-group-flush">
+            {% for user in BestUsers %}
+                <li class="list-group-item">{{ user }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

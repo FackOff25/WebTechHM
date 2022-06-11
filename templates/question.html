@@ -1,0 +1,18 @@
+{% extends "include/base.html" %}
+{% load static %}
+
+{% block content %}
+    {% include "include/openedQuestion.html" %}
+    <hr/>
+    <h2 class="mt-5">Answers</h2>
+    {% for answer in iterators %}
+        {% include "include/answer.html" %}
+    {% endfor %}
+    <hr/>
+    {% include "include/youranswerform.html" %}
+    {% include "include/paginator.html" %}
+{% endblock %}
+
+{% block side-panel %}
+    {% include "include/sidepanel.html" %}
+{% endblock %}

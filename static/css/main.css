@@ -143,8 +143,13 @@ hr {
     margin: 10px;
 }
 
+.best-container {
+    width: 100%;
+}
+
 .newTag {
     margin-right: 10px;
+    width: fit-content !important;
 }
 
 /*bootstrap example section*/
