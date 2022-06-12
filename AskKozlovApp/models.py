@@ -117,10 +117,6 @@ class Question(models.Model):
     def link(self):
         return "/question/" + str(self.id) + "/"
 
-    def get_vote(self, profile_id):
-        return QuestionRatingMark.votes[QuestionRatingMark.objects.filter(fk_question=self.pk,
-                                                                          fk_profile=profile_id).all().vote]
-
     class Meta:
         db_table = 'questions'
         managed = True
@@ -184,6 +180,9 @@ class QuestionRatingMarkManager(models.Manager):
         for i in objs:
             post_save.send(i.__class__, instance=i, created=True)
 
+    def get_vote(self, question_id, profile_id):
+        return QuestionRatingMark.votes[self.filter(fk_question=question_id, fk_profile=profile_id).all()[0].vote][1]
+
 
 class QuestionRatingMark(models.Model):
     votes = [(1, 'up'), (-1, 'down'), (0, 'none'), ]
@@ -220,6 +219,9 @@ class AnswerRatingMarkManager(models.Manager):
         super().bulk_create(objs, size)
         for i in objs:
             post_save.send(i.__class__, instance=i, created=True)
+
+    def get_vote(self, answer_id, profile_id):
+        return AnswerRatingMark.votes[self.filter(fk_answer=answer_id, fk_profile=profile_id).all()[0].vote][1]
 
 
 class AnswerRatingMark(models.Model):

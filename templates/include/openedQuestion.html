@@ -1,20 +1,23 @@
 {% load static %}
+{% load check_vote %}
 <div class="row mt-4 opened-question">
     <div class="col-3">
         <img class="avatar-opened-question" src="{{ question.fk_profile.userPfp }}">
         <div class="row-3 rating-box">
             <div class="rating">{{ question.rating }}</div>
             <div class="col-2 btn-group-vertical rate-buttons">
-                {% if question.voted == "up" %}
-                    <img type="button" class="rate-button" src="{% static "img/arrow-up-pressed.png" %}">
-                    <img type="button" class="rate-button" src="{% static "img/arrow-down.png" %}">
-                {% elif question.voted == "down" %}
-                    <img type="button" class="rate-button" src="{% static "img/arrow-up.png" %}">
-                    <img type="button" class="rate-button" src="{% static "img/arrow-down-pressed.png" %}">
-                {% else %}
-                    <img type="button" class="rate-button" src="{% static "img/arrow-up.png" %}">
-                    <img type="button" class="rate-button" src="{% static "img/arrow-down.png" %}">
-                {% endif %}
+                {% with info=request.user.pk %}
+                    {% if question.pk|check_question_vote:info == "up" %}
+                        <img type="button" class="rate-button" src="{% static "img/arrow-up-pressed.png" %}">
+                        <img type="button" class="rate-button" src="{% static "img/arrow-down.png" %}">
+                    {% elif question.pk|check_question_vote:info == "down" %}
+                        <img type="button" class="rate-button" src="{% static "img/arrow-up.png" %}">
+                        <img type="button" class="rate-button" src="{% static "img/arrow-down-pressed.png" %}">
+                    {% else %}
+                        <img type="button" class="rate-button" src="{% static "img/arrow-up.png" %}">
+                        <img type="button" class="rate-button" src="{% static "img/arrow-down.png" %}">
+                    {% endif %}
+                {% endwith %}
             </div>
         </div>
     </div>
