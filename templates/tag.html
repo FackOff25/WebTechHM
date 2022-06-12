@@ -1,4 +1,7 @@
 {% extends "include/index.html" %}
+
+{% block title %}Tag: {{ header }}{% endblock %}
+
 {% block theme %}
     <h2 class="mt-5">Tag: <a href="{% url "tag" tg=header %}">{{header}}</a></h2>
 {% endblock theme %}
