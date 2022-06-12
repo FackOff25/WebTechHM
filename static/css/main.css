@@ -50,6 +50,11 @@ hr {
     height: 100px;
 }
 
+.avatar-answer {
+    width: 100px;
+    height: 100px;
+}
+
 .avatar-small-icon {
     height: 50px;
     width: 50px;

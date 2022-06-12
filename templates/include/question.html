@@ -1,7 +1,9 @@
 {% load static %}
 <div class="row question">
     <div class="col-2">
-        <img class="avatar-question" src="{{ question.userPfp }}">
+        <object class="avatar-question" data="{{ question.fk_profile.userPfp }}" type="image/jpg">
+            <img class="avatar-question" src="{% static "img/no-avatar.png" %}" alt="avatar">
+        </object>
         <div class="row-1 rating-box">
             <div class="rating">{{ question.rating }}</div>
             <div class="col-2 btn-group-vertical">
@@ -28,7 +30,7 @@
         <div class="row">
             <span class="col-3"><a href="{% url "question" question.id %}">Answers(3)</a></span>
             <span class="me-auto col-7">Tags:
-                {% for tag in question.tags %}
+                {% for tag in question.fk_tags.all %}
                     <a href="{% url "tag" tg=tag %}">{{ tag }}</a>
                 {% endfor %}
             </span>

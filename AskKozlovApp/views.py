@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
 from . import fictionalDB
+from .models import Question
 
 
 # Create your views here.
@@ -15,14 +16,14 @@ def paginate(objects_list, request, per_page=5):
 
 def new_questions(request):
     request.user = fictionalDB.USER
-    iterators = paginate(fictionalDB.QUESTIONS, request, 5)
+    iterators = paginate(Question.objects.get_new_questions(), request, 5)
     return render(request, 'newquestions.html', {'BestTags': fictionalDB.TAGS,
                                                  'BestUsers': fictionalDB.BESTUSERS, 'iterators': iterators})
 
 
 def hot_questions(request):
     request.user = fictionalDB.USER
-    iterators = paginate(fictionalDB.QUESTIONS, request, 5)
+    iterators = paginate(Question.objects.get_hot_questions(), request, 5)
     return render(request, 'hotquestions.html', {'BestTags': fictionalDB.TAGS,
                                                  'BestUsers': fictionalDB.BESTUSERS, 'iterators': iterators})
 
@@ -30,7 +31,7 @@ def hot_questions(request):
 # for now, it is just link to main page
 def list_with_tags(request, tg):
     request.user = fictionalDB.USER
-    iterators = paginate(fictionalDB.QUESTIONS, request, 5)
+    iterators = paginate(Question.objects.get_questions_by_tag(tg), request, 5)
     return render(request, 'tag.html', {'BestTags': fictionalDB.TAGS,
                                         'BestUsers': fictionalDB.BESTUSERS, 'iterators': iterators, 'header': tg})
 

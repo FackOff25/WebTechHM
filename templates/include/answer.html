@@ -1,7 +1,9 @@
 {% load static %}
 <div class="row answer">
     <div class="col-2">
-        <img class="avatar-question" src="{{ answer.userPfp }}">
+        <object class="avatar-answer" data="{{ answer.fk_profile.userPfp }}" type="image/jpg">
+            <img class="avatar-answer" src="{% static "img/no-avatar.png" %}" alt="avatar">
+        </object>
         <div class="row-1 rating-box">
             <div class="rating">{{ answer.rating }}</div>
             <div class="col-2 btn-group-vertical rate-buttons">
