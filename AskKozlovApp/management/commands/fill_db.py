@@ -71,6 +71,7 @@ class Command(BaseCommand):
             )
             Profile.objects.create(
                 user=user,
+                nickname=name,
                 userPfp="/"+choice(images)
             )
 

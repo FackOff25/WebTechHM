@@ -8,7 +8,7 @@
             <div class="rating">{{ question.rating }}</div>
             <div class="col-2 btn-group-vertical">
                 <div class="col-2 btn-group-vertical rate-buttons">
-                    {% if question.voted == "up" %}
+                    {% if question.get == "up" %}
                         <img type="button" class="rate-button" src="{% static "img/arrow-up-pressed.png" %}">
                         <img type="button" class="rate-button" src="{% static "img/arrow-down.png" %}">
                     {% elif question.voted == "down" %}

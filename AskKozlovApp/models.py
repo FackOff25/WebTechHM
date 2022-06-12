@@ -1,6 +1,5 @@
 from django.db import models
 from django.db.models import ObjectDoesNotExist, signals
-from django.dispatch import receiver
 from django.http import Http404
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -8,10 +7,20 @@ from django.db.models.signals import post_save
 
 # Create your models here.
 
+class ProfileManager(models.Manager):
+    def get_best(self, amount):
+        try:
+            best = self.all()[0:amount]
+        except ObjectDoesNotExist:
+            raise Http404
+        return best
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
+    nickname = models.CharField(max_length=255, default=None)
     userPfp = models.ImageField(max_length=255, default=None)
+    objects = ProfileManager()
 
     def __str__(self):
         if self.user.username == '':
@@ -38,10 +47,10 @@ class TagManager(models.Manager):
 
     def get_popular(self, amount):
         try:
-            answers = self.all()[0:amount]
+            tags = self.all()[0:amount]
         except ObjectDoesNotExist:
             raise Http404
-        return answers
+        return tags
 
 
 class Tag(models.Model):
@@ -108,10 +117,9 @@ class Question(models.Model):
     def link(self):
         return "/question/" + str(self.id) + "/"
 
-    @property
-    def get_answers_num(self):
-        _answers_num = Answer.objects.all().filter(fk_question=self.id).count()
-        return _answers_num
+    def get_vote(self, profile_id):
+        return QuestionRatingMark.votes[QuestionRatingMark.objects.filter(fk_question=self.pk,
+                                                                          fk_profile=profile_id).all().vote]
 
     class Meta:
         db_table = 'questions'
@@ -171,7 +179,6 @@ signals.post_save.connect(receiver=create_answer, sender=Answer)
 
 
 class QuestionRatingMarkManager(models.Manager):
-
     def bulk_create(items, objs, size):
         super().bulk_create(objs, size)
         for i in objs:
