@@ -36,6 +36,13 @@ class TagManager(models.Manager):
             raise Http404
         return answers
 
+    def get_popular(self, amount):
+        try:
+            answers = self.all()[0:amount]
+        except ObjectDoesNotExist:
+            raise Http404
+        return answers
+
 
 class Tag(models.Model):
 
@@ -44,12 +51,6 @@ class Tag(models.Model):
             return "ERROR-TAG NAME IS NULL"
         return self.tagname
 
-    class Meta:
-        db_table = 'tags'
-        managed = True
-        verbose_name = 'Tag'
-        verbose_name_plural = 'Tags'
-
     tagname = models.CharField(primary_key=True, max_length=255)
 
     objects = TagManager()
@@ -57,6 +58,12 @@ class Tag(models.Model):
     @property
     def link(self):
         return "/tags/" + self.tagname
+
+    class Meta:
+        db_table = 'tags'
+        managed = True
+        verbose_name = 'Tag'
+        verbose_name_plural = 'Tags'
 
 
 class QuestionManager(models.Manager):
@@ -67,7 +74,7 @@ class QuestionManager(models.Manager):
         return self.select_related().order_by("-rating").prefetch_related('fk_profile')
 
     def get_questions_by_tag(self, tag):
-        questions = self.filter(fk_tags__tagname__iexact=tag).prefetch_related('fk_profile')
+        questions = self.filter(fk_tags__tagname__iexact=tag).order_by("-rating").prefetch_related('fk_profile')
         if not questions:
             raise Http404
         return questions
@@ -119,7 +126,7 @@ class AnswerManager(models.Manager):
 
     def get_by_question_id(self, q_id):
         try:
-            answers = self.all().prefetch_related('fk_profile').filter(fk_question=q_id)
+            answers = self.all().filter(fk_question=q_id).order_by("-rating").prefetch_related('fk_profile')
         except ObjectDoesNotExist:
             raise Http404
         return answers
