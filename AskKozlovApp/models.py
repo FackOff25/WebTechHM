@@ -18,8 +18,8 @@ class ProfileManager(models.Manager):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
-    nickname = models.CharField(max_length=255, default=None)
-    userPfp = models.ImageField(max_length=255, default=None)
+    nickname = models.CharField(max_length=255, default=None, null=True)
+    userPfp = models.ImageField(max_length=255, default=None, null=True)
     objects = ProfileManager()
 
     def __str__(self):
@@ -30,6 +30,13 @@ class Profile(models.Model):
     class Meta:
         verbose_name = 'User profile'
         verbose_name_plural = 'User profiles'
+
+    @property
+    def nick(self):
+        if self.nickname == '':
+            return self.user.username
+        else:
+            return self.nickname
 
     @property
     def userlink(self):

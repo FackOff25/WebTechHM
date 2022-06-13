@@ -21,11 +21,13 @@
                 </div>
 
                 <ul class="navbar-nav mr-auto">
-                    {% if request.user.isAuth %}
-                        <img class="avatar-small-icon" src="{{ request.user.userPfp }}">
+                    {% if request.user.is_authenticated %}
+                        <object class="avatar-small-icon" data="{{ request.user.profile.userPfp }}" type="image/jpg">
+                            <img class="avatar-small-icon" src="{% static "img/no-avatar.png" %}" alt="avatar">
+                        </object>
 
                         <li class="nav-item active">
-                            <span class="my-name">{{ request.user.nickname }}</span>
+                            <span class="my-name">{{ request.user.profile.nick }}</span>
                         </li>
                         <li class="nav-item active">
                             <a class="nav-link" href={% url "settings" %}>Settings</a>
