@@ -7,7 +7,7 @@ from django.urls import reverse
 
 from django.contrib.auth.models import User
 from AskKozlovApp.models import Profile, Question, Answer, Tag
-from AskKozlovApp.forms import LoginForm, SignupForm, QuestionForm, SettingsForm
+from AskKozlovApp.forms import LoginForm, SignupForm, QuestionForm, SettingsForm, AnswerForm
 
 
 # Create your views here.
@@ -147,8 +147,22 @@ def ask(request):
 def question(request, qid: int):
     the_question = Question.objects.get_question_by_id(qid)
     iterators = paginate(Answer.objects.get_by_question_id(qid), request, 5)
+    request.session['continue'] = reverse('question', args=[the_question.pk])
+
+    if request.method == 'GET':
+        form = AnswerForm
+    else:
+        form = AnswerForm(data=request.POST)
+        if form.is_valid():
+            answer = Answer.objects.create(text=form.cleaned_data['text'], fk_profile=request.user.profile,
+                                           fk_question=the_question)
+            page = iterators.end_index()
+            return redirect(reverse('question', args=[the_question.pk]) + '?page=' + str(page) + '#'
+                            + str(answer.pk))
+
     return render(request, "question.html", {'BestTags': Tag.objects.get_popular(6),
                                              'BestUsers': Profile.objects.get_best(6),
                                              'isAsker': request.user.pk == the_question.fk_profile.pk,
                                              'question': the_question,
-                                             'iterators': iterators})
+                                             'iterators': iterators,
+                                             'form': form, })
