@@ -156,8 +156,13 @@ def question(request, qid: int):
         if form.is_valid():
             answer = Answer.objects.create(text=form.cleaned_data['text'], fk_profile=request.user.profile,
                                            fk_question=the_question)
-            page = iterators.end_index()
-            return redirect(reverse('question', args=[the_question.pk]) + '?page=' + str(page) + '#'
+            answers_list = Paginator(Answer.objects.get_by_question_id(qid), 5)
+            needed_page = iterators.end_index()
+            for i in range(1, answers_list.num_pages + 1):
+                if answer in answers_list.page(i).object_list:
+                    needed_page = i
+                    break
+            return redirect(reverse('question', args=[the_question.pk]) + '?page=' + str(needed_page) + '#answer-'
                             + str(answer.pk))
 
     return render(request, "question.html", {'BestTags': Tag.objects.get_popular(6),
