@@ -31,6 +31,7 @@ class SignupForm(forms.ModelForm):
 
 class QuestionForm(forms.ModelForm):
     title = forms.CharField(label='Question title')
+    text = forms.CharField(widget=forms.Textarea(), label='Question text')
     tags = forms.TypedMultipleChoiceField(choices=Tag.objects.all().values_list("pk", "tagname"), label='Tags')
 
     class Meta:
