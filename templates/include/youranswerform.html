@@ -1,9 +1,8 @@
-<form>
+{% load bootstrap4 %}
+<form method="post">
     <div class="form-group your-answer-form-box">
-        <div>
-            <textarea class="form-control your-answer-form" rows="3" placeholder="Enter answer"></textarea>
-            <small class="error">You can't send an empty answer</small>
-        </div>
+        {% csrf_token %}
+        {% bootstrap_form form %}
         <button type="submit" class="btn btn-outline-success">Answer</button>
     </div>
 

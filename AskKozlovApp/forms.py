@@ -33,12 +33,21 @@ class SignupForm(forms.ModelForm):
 
 class QuestionForm(forms.ModelForm):
     title = forms.CharField(label='Question title')
-    text = forms.CharField(widget=forms.Textarea(), label='Question text')
+    text = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Enter a question'}), label='Question text')
     tags = forms.TypedMultipleChoiceField(choices=Tag.objects.all().values_list("pk", "tagname"), label='Tags')
 
     class Meta:
         model = Question
         fields = ['title', 'text', 'tags']
+
+
+class AnswerForm(forms.ModelForm):
+    text = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Enter an answer',
+                                                         'class': 'form-control your-answer-form'}), label='',)
+
+    class Meta:
+        model = Question
+        fields = ['text']
 
 
 class SettingsForm(forms.ModelForm):
