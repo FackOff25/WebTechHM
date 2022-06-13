@@ -1,7 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.utils.safestring import mark_safe
+from string import Template
 
-from AskKozlovApp.models import Profile, Question, Tag
+from AskKozlovApp.models import Profile, Question, Tag, User
 
 
 class LoginForm(forms.Form):
@@ -39,3 +41,12 @@ class QuestionForm(forms.ModelForm):
         fields = ['title', 'text', 'tags']
 
 
+class SettingsForm(forms.ModelForm):
+    login = forms.CharField(label='Login')
+    email = forms.EmailField(label='E-mail')
+    nickname = forms.CharField(label='Nickname', required=False)
+    user_pfp = forms.ImageField(label='Avatar', required=False)
+
+    class Meta:
+        model = User
+        fields = ['login', 'email', 'nickname', 'user_pfp']

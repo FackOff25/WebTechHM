@@ -7,7 +7,7 @@ from django.urls import reverse
 
 from django.contrib.auth.models import User
 from AskKozlovApp.models import Profile, Question, Answer, Tag
-from AskKozlovApp.forms import LoginForm, SignupForm, QuestionForm
+from AskKozlovApp.forms import LoginForm, SignupForm, QuestionForm, SettingsForm
 
 
 # Create your views here.
@@ -93,14 +93,36 @@ def login(request):
 
 # for now, it is just link to main page
 def logout(request):
+    next_url = request.session.pop('continue', '/new/')
     auth.logout(request)
-    return redirect(request.session.pop('continue', '/new/'))
+    return redirect(next_url)
 
 
 @login_required()
 def settings(request):
+    profile = Profile.objects.get(user=request.user)
+    if request.method == 'POST':
+        form = SettingsForm(data=request.POST)
+        if form.is_valid():
+            profile.nickname = form.cleaned_data['nickname']
+            profile.userPfp = form.cleaned_data['user_pfp']
+            profile.user.username = form.cleaned_data['login']
+            profile.user.email = form.cleaned_data['email']
+            profile.user.save()
+            profile.save()
+            return render(request, "settings.html", {'BestTags': Tag.objects.get_popular(6),
+                                                     'BestUsers': Profile.objects.get_best(6),
+                                                     'form': form, })
+        else:
+            form.add_error(None, 'General Error')
+
+    data = {'login': profile.user.username,
+            'email': profile.user.email,
+            'nickname': profile.nickname, }
+    form = SettingsForm(data=data)
     return render(request, "settings.html", {'BestTags': Tag.objects.get_popular(6),
-                                             'BestUsers': Profile.objects.get_best(6)})
+                                             'BestUsers': Profile.objects.get_best(6),
+                                             'form': form, })
 
 
 @login_required()
