@@ -10,7 +10,7 @@
             <label for="loginInput" class="col-sm-2 col-form-label">Login</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="loginInput"
-                       placeholder="Enter login" value="{{ request.user.user.username }}" required>
+                       placeholder="Enter login" value="{{ request.user.username }}" required>
                 <small class="error">Wrong login</small>
             </div>
         </div>
@@ -19,7 +19,7 @@
             <label for="emailInput" class="col-sm-2 col-form-label">E-mail</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="emailInput"
-                       placeholder="enter e-mail" value="{{ request.user.user.email }}" required>
+                       placeholder="enter e-mail" value="{{ request.user.email }}" required>
                 <small class="error">Wrong e-mail</small>
             </div>
         </div>
@@ -28,14 +28,14 @@
             <label for="nicknameInput" class="col-sm-2 col-form-label">NickName</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="nicknameInput"
-                       placeholder="Enter nickname" value="{{ request.user.nickname }}" required>
+                       placeholder="Enter nickname" value="{{ request.user.profile.nickname }}" required>
                 <!--small class="error">Wrong nickname</small-->
             </div>
         </div>
         <div class="form-group row new-question-form-block">
             <label class="col-sm-2 form-label" for="avatarUpload">Avatar</label>
             <div class="col-sm-10">
-                <object class="avatar-settings" data="{{ request.user.userPfp }}" type="image/jpg">
+                <object class="avatar-settings" data="{{ request.user.profile.userPfp }}" type="image/jpg">
                     <img class="avatar-settings" src="{% static "img/no-avatar.png" %}" alt="avatar">
                 </object>
                 <input type="file" class="form-control" id="avatarUpload" accept="image/*">
