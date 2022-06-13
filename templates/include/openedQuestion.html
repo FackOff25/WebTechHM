@@ -2,7 +2,9 @@
 {% load check_vote %}
 <div class="row mt-4 opened-question">
     <div class="col-3">
-        <img class="avatar-opened-question" src="{{ question.fk_profile.userPfp }}">
+        <object class="avatar-opened-question" data="{{ question.fk_profile.userPfp }}" type="image/jpg">
+            <img class="avatar-opened-question" src="{% static "img/no-avatar.png" %}" alt="avatar">
+        </object>
         <div class="row-3 rating-box">
             <div class="rating">{{ question.rating }}</div>
             <div class="col-2 btn-group-vertical rate-buttons">

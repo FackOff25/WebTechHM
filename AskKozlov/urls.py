@@ -27,6 +27,6 @@ urlpatterns = [
     path('login/', views.login, name="log in"),
     path('logout/', views.logout, name="log out"),
     path('settings/', views.settings, name="settings"),
-    path('ask/', views.ask, name="newquestion"),
+    path('ask/', views.ask, name="new question"),
     path('question/<int:qid>/', views.question, name="question")
 ]

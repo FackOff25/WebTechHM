@@ -7,7 +7,7 @@ from django.urls import reverse
 
 from django.contrib.auth.models import User
 from AskKozlovApp.models import Profile, Question, Answer, Tag
-from AskKozlovApp.forms import LoginForm, SignupForm
+from AskKozlovApp.forms import LoginForm, SignupForm, QuestionForm
 
 
 # Create your views here.
@@ -28,14 +28,14 @@ def new_questions(request):
 
 
 def hot_questions(request):
-    request.session['continue'] = reverse('рще questions')
+    request.session['continue'] = reverse('hot questions')
     iterators = paginate(Question.objects.get_hot_questions(), request, 5)
     return render(request, 'hotquestions.html', {'BestTags': Tag.objects.get_popular(6),
                                                  'BestUsers': Profile.objects.get_best(6), 'iterators': iterators})
 
 
 def list_with_tags(request, tg):
-    request.session['continue'] = reverse('tag', tg)
+    request.session['continue'] = reverse('tag', args=[tg])
     iterators = paginate(Question.objects.get_questions_by_tag(tg), request, 5)
     return render(request, 'tag.html', {'BestTags': Tag.objects.get_popular(6),
                                         'BestUsers': Profile.objects.get_best(6),
@@ -55,12 +55,11 @@ def signup(request):
                                                                                form.cleaned_data['password']),
                                                  nickname=form.cleaned_data['nickname'],
                                                  userPfp=form.cleaned_data['user_pfp'])
-                user = auth.authenticate(request, **form.cleaned_data)
                 if profile is not None:
-                    auth.login(request, user)
+                    auth.login(request, profile.user)
                     return redirect(reverse('new questions'))
                 else:
-                    form.add_error('Login', 'User already exists')
+                    form.add_error('login', 'User already exists')
             except IntegrityError as e:
                 if e.args[0] == 'UNIQUE constraint failed: auth_user.username':
                     form.add_error('login', 'User already exists')
@@ -79,7 +78,7 @@ def login(request):
         if form.is_valid():
             user = auth.authenticate(request, **form.cleaned_data)
             try:
-                if user and user.profile:
+                if user is not None and user.profile is not None:
                     auth.login(request, user)
                     return redirect(request.session.pop('continue', '/new/'))
                 else:
@@ -106,8 +105,21 @@ def settings(request):
 
 @login_required()
 def ask(request):
+    request.session['continue'] = reverse('new question')
+    if request.method == 'POST':
+        form = QuestionForm(data=request.POST)
+        if form.is_valid():
+            new_question = Question.objects.create(title=form.cleaned_data['title'], fk_profile=request.user.profile)
+            new_question.fk_tags.set(form.cleaned_data['tags'])
+            new_question.save()
+            return redirect(reverse('question', args=[new_question.pk]))
+        else:
+            return redirect(reverse('new questions'))
+
+    form = QuestionForm
     return render(request, "newquestion.html", {'BestTags': Tag.objects.get_popular(6),
-                                                'BestUsers': Profile.objects.get_best(6)})
+                                                'BestUsers': Profile.objects.get_best(6),
+                                                'form': form, })
 
 
 def question(request, qid: int):

@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from AskKozlovApp.models import Profile
+from AskKozlovApp.models import Profile, Question, Tag
 
 
 class LoginForm(forms.Form):
@@ -27,3 +27,14 @@ class SignupForm(forms.ModelForm):
         if password_one != password_two:
             self.add_error('password', '')
             raise ValidationError('passwords do not match')
+
+
+class QuestionForm(forms.ModelForm):
+    title = forms.CharField(label='Question title')
+    tags = forms.TypedMultipleChoiceField(choices=Tag.objects.all().values_list("pk", "tagname"), label='Tags')
+
+    class Meta:
+        model = Question
+        fields = ['title', 'text', 'tags']
+
+
