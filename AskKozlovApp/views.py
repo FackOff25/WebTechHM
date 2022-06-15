@@ -1,14 +1,15 @@
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
-from django.http.response import JsonResponse, HttpResponseBadRequest
+from django.http.response import JsonResponse, HttpResponseBadRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.urls import reverse
 
 from django.views.decorators.http import require_http_methods, require_POST
 
-from AskKozlovApp.models import Profile, Question, Answer, Tag, QuestionRatingMark
+from AskKozlovApp.models import Profile, Question, Answer, Tag, QuestionRatingMark, AnswerRatingMark
 from AskKozlovApp.forms import LoginForm, SignupForm, QuestionForm, SettingsForm, AnswerForm
 
 
@@ -168,9 +169,11 @@ def question(request, qid: int):
                                              'form': form, })
 
 
-@login_required()
 @require_POST
 def vote_question(request):
+    if not request.user.is_authenticated:
+        return HttpResponse('Unauthorized', status=401)
+
     try:
         question_id = request.POST['question_id']
         type = request.POST['type']
@@ -180,7 +183,7 @@ def vote_question(request):
     ques = Question.objects.get_question_by_id(question_id)
     try:
         mark = QuestionRatingMark.objects.get(fk_question=ques, fk_profile=request.user.profile)
-    except:
+    except ObjectDoesNotExist:
         mark = None
 
     if mark is not None:
@@ -217,3 +220,60 @@ def vote_question(request):
             return HttpResponseBadRequest()
 
     return JsonResponse({'new_rating': ques.rating, 'new_state': mark.vote})
+
+@require_POST
+def vote_answer(request):
+
+    if not request.user.is_authenticated:
+        return HttpResponse('Unauthorized', status=401)
+
+    try:
+        answer_id = request.POST['answer_id']
+        type = request.POST['type']
+    except:
+        return HttpResponseBadRequest()
+
+    try:
+        ans = Answer.objects.get(pk=answer_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound()
+
+    try:
+        mark = AnswerRatingMark.objects.get(fk_answer=ans, fk_profile=request.user.profile)
+    except ObjectDoesNotExist:
+        mark = None
+
+    if mark is not None:
+        if type == "up":
+            if mark.vote == 0:
+                ans.rating += 1
+                mark.vote = 1
+            elif mark.vote == -1:
+                ans.rating += 2
+                mark.vote = 1
+            else:
+                ans.rating -= 1
+                mark.vote = 0
+        elif type == 'down':
+            if mark.vote == 0:
+                ans.rating -= 1
+                mark.vote = -1
+            elif mark.vote == 1:
+                ans.rating -= 2
+                mark.vote = -1
+            else:
+                ans.rating += 1
+                mark.vote = 0
+        else:
+            return HttpResponseBadRequest()
+        mark.save()
+        ans.save()
+    else:
+        if type == "up":
+            mark = AnswerRatingMark.objects.create(vote=1, fk_answer=ans, fk_profile=request.user.profile)
+        elif type == 'down':
+            mark = AnswerRatingMark.objects.create(vote=-1, fk_answer=ans, fk_profile=request.user.profile)
+        else:
+            return HttpResponseBadRequest()
+
+    return JsonResponse({'new_rating': ans.rating, 'new_state': mark.vote})
