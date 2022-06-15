@@ -163,7 +163,7 @@ def question(request, qid: int):
 
     return render(request, "question.html", {'BestTags': Tag.objects.get_popular(6),
                                              'BestUsers': Profile.objects.get_best(6),
-                                             'isAsker': request.user.pk == the_question.fk_profile.pk,
+                                             'isAsker': request.user.profile.pk == the_question.fk_profile.pk,
                                              'question': the_question,
                                              'iterators': iterators,
                                              'form': form, })
@@ -277,3 +277,33 @@ def vote_answer(request):
             return HttpResponseBadRequest()
 
     return JsonResponse({'new_rating': ans.rating, 'new_state': mark.vote})
+
+
+@require_POST
+def submit_correction(request):
+    print(request.POST)
+    if not request.user.is_authenticated:
+        return HttpResponse('Unauthorized', status=401)
+
+    try:
+        answer_id = request.POST['answer_id']
+        correction = request.POST['correction']
+    except:
+        return HttpResponseBadRequest()
+
+    if correction == 'true':
+        correction = True
+    elif correction == 'false':
+        correction = False
+    else:
+        return HttpResponseBadRequest()
+
+    try:
+        ans = Answer.objects.get(pk=answer_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound()
+
+    ans.marked_correct = correction
+    ans.save()
+
+    return HttpResponse('OK', status=200)

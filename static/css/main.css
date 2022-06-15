@@ -157,6 +157,10 @@ hr {
     width: fit-content !important;
 }
 
+.submit-correction{
+    display: none;
+}
+
 /*bootstrap example section*/
 .bd-placeholder-img {
     font-size: 1.125rem;

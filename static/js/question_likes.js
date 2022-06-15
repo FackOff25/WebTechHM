@@ -35,6 +35,7 @@ $(document).ready(function () {
         fetch(request).then(function (response) {
             if (response.status === 401) {
                 alert("You must be authorized to vote")
+                return
             }
             response.json().then(function (parsed) {
                 const parent = $this.parent();

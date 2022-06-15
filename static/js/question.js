@@ -35,6 +35,7 @@ $(document).ready(function () {
         fetch(request).then(function (response) {
             if (response.status === 401) {
                 alert("You must be authorized to vote")
+                return
             }
             response.json().then(function (parsed) {
                 const parent = $this.parent();
@@ -76,6 +77,7 @@ $(document).ready(function () {
         fetch(request).then(function (response) {
             if (response.status === 401) {
                 alert("You must be authorized to vote")
+                return
             }
             response.json().then(function (parsed) {
                 const parent = $this.parent();
@@ -96,6 +98,44 @@ $(document).ready(function () {
                 console.log(rating_box)
                 rating_box.text(parsed.new_rating)
             });
+        })
+    });
+
+    $("input.correction").click(function () {
+        const $this = $(this)
+        const button = $this.parent().children("button.submit-correction")
+
+        switch (button.css("display")) {
+            case "none":
+                button.css("display", "block");
+                break;
+            default:
+                button.css("display", "none");
+                break;
+        }
+    });
+
+    $("button.submit-correction").click(function () {
+        const $this = $(this)
+        const checkbox = $this.parent().children("input.correction")
+
+        const request = new Request(
+            '/submit_correction/',
+            {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'answer_id=' + $this.data('id') + "&correction=" + checkbox.is(":checked").toString()
+            }
+        );
+        fetch(request).then(function (response) {
+            if (response.status === 401) {
+                alert("You must be authorized to vote");
+                return
+            }
+            $this.css("display", "none");
         })
     });
 });
