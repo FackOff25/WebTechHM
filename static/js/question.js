@@ -132,7 +132,7 @@ $(document).ready(function () {
         );
         fetch(request).then(function (response) {
             if (response.status === 401) {
-                alert("You must be authorized to vote");
+                alert("You are unauthorized, you are not supposed to say what is correct");
                 return
             }
             if (response.status === 403){

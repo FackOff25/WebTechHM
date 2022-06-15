@@ -1,5 +1,4 @@
 from random import choice
-#from itertools import islice
 from django.core.management.base import BaseCommand
 from AskKozlovApp.models import Profile, Tag, Question, Answer, QuestionRatingMark, AnswerRatingMark
 from django.contrib.auth.models import User
@@ -57,7 +56,7 @@ class Command(BaseCommand):
 
         usernames = set()
 
-        file_path_type = "static/img/*.jpg"
+        file_path_type = "media/img/*.jpg"
         images = glob.glob(file_path_type)
 
         while len(usernames) != n:
@@ -72,7 +71,7 @@ class Command(BaseCommand):
             Profile.objects.create(
                 user=user,
                 nickname=name,
-                userPfp="/"+choice(images)
+                userPfp=choice(images)[6:]
             )
 
     def fill_questions(self, n):

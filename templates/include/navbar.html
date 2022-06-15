@@ -23,7 +23,7 @@
                 <ul class="navbar-nav mr-auto">
                     {% if request.user.is_authenticated %}
                         <img class="avatar-small-icon"
-                             src="{% if request.user.profile.userPfp != '' %}{{ request.user.profile.userPfp.url }}{% else %}{% static "img/no-avatar.png" %}{% endif %}"
+                             src="{% if request.user.profile.userPfp != '' %}{% get_media_prefix %}{{ request.user.profile.userPfp }}{% else %}{% static "img/no-avatar.png" %}{% endif %}"
                              alt="avatar">
 
                         <li class="nav-item active">

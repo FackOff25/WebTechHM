@@ -4,7 +4,7 @@
     <div class="col-2">
         <img class="avatar-answer"
              src="
-                     {% if answer.fk_profile.userPfp != '' %}{{ answer.fk_profile.userPfp.url }}{% else %}{% static "img/no-avatar.png" %}{% endif %}"
+                     {% if answer.fk_profile.userPfp != '' %}{% get_media_prefix %}{{ answer.fk_profile.userPfp }}{% else %}{% static "img/no-avatar.png" %}{% endif %}"
              alt="avatar">
         <div class="row-1 rating-box">
             <div class="rating">{{ answer.rating }}</div>

@@ -11,7 +11,7 @@
             {% bootstrap_form form %}
             <div class="col-sm-10">
                 <img class="avatar-settings"
-                     src="{% if request.user.profile.userPfp != '' %}{{ request.user.profile.userPfp.url }}{% else %}{% static "img/no-avatar.png" %}{% endif %}"
+                     src="{% if request.user.profile.userPfp != '' %}{% get_media_prefix %}{{ request.user.profile.userPfp }}{% else %}{% static "img/no-avatar.png" %}{% endif %}"
                      alt="avatar">
             </div>
             <!--label for="loginInput" class="col-sm-2 col-form-label">Login</label>

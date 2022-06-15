@@ -142,7 +142,10 @@ def ask(request):
 
 @require_http_methods(['GET', 'POST'])
 def question(request, qid: int):
-    the_question = Question.objects.get_question_by_id(qid)
+    try:
+        the_question = Question.objects.get_question_by_id(qid)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound()
     iterators = paginate(Answer.objects.get_by_question_id(qid), request, 5)
     request.session['continue'] = reverse('question', args=[the_question.pk])
 
@@ -162,9 +165,14 @@ def question(request, qid: int):
             return redirect(reverse('question', args=[the_question.pk]) + '?page=' + str(needed_page) + '#answer-'
                             + str(form.instance.pk))
 
+    if request.user.is_authenticated:
+        isAsker = request.user.profile.pk == the_question.fk_profile.pk
+    else:
+        isAsker = False
+
     return render(request, "question.html", {'BestTags': Tag.objects.get_popular(6),
                                              'BestUsers': Profile.objects.get_best(6),
-                                             'isAsker': request.user.profile.pk == the_question.fk_profile.pk,
+                                             'isAsker': isAsker,
                                              'question': the_question,
                                              'iterators': iterators,
                                              'form': form, })
@@ -181,7 +189,11 @@ def vote_question(request):
     except:
         return HttpResponseBadRequest()
 
-    ques = Question.objects.get_question_by_id(question_id)
+    try:
+        ques = Question.objects.get_question_by_id(question_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound()
+
     try:
         mark = QuestionRatingMark.objects.get(fk_question=ques, fk_profile=request.user.profile)
     except ObjectDoesNotExist:
