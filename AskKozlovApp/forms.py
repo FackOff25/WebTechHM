@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 from string import Template
 
-from AskKozlovApp.models import Profile, Question, Tag, User
+from AskKozlovApp.models import Profile, Question, Tag, User, Answer
 
 
 class LoginForm(forms.Form):
@@ -30,6 +30,13 @@ class SignupForm(forms.ModelForm):
             self.add_error('password', '')
             raise ValidationError('passwords do not match')
 
+    def save(self, *args, **kwargs):
+        self.instance = Profile.objects.create(user=User.objects.create_user(self.cleaned_data['login'],
+                                                                             self.cleaned_data['email'],
+                                                                             self.cleaned_data['password']),
+                                               nickname=self.cleaned_data['nickname'],
+                                               userPfp=self.cleaned_data['user_pfp'])
+
 
 class QuestionForm(forms.ModelForm):
     title = forms.CharField(label='Question title')
@@ -52,6 +59,10 @@ class AnswerForm(forms.ModelForm):
     class Meta:
         model = Question
         fields = ['text']
+
+    def save(self, *args, **kwargs):
+        self.instance = Answer.objects.create(text=self.cleaned_data['text'], fk_profile=args[0]['user'].profile,
+                                              fk_question=args[0]['question'])
 
 
 class SettingsForm(forms.ModelForm):

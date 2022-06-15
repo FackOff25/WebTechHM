@@ -54,13 +54,9 @@ def signup(request):
         form = SignupForm(data=request.POST)
         if form.is_valid():
             try:
-                profile = Profile.objects.create(user=User.objects.create_user(form.cleaned_data['login'],
-                                                                               form.cleaned_data['email'],
-                                                                               form.cleaned_data['password']),
-                                                 nickname=form.cleaned_data['nickname'],
-                                                 userPfp=form.cleaned_data['user_pfp'])
-                if profile is not None:
-                    auth.login(request, profile.user)
+                form.save()
+                if form.instance is not None:
+                    auth.login(request, form.instance.user)
                     return redirect(reverse('new questions'))
                 else:
                     form.add_error('login', 'User already exists')
@@ -154,16 +150,16 @@ def question(request, qid: int):
     else:
         form = AnswerForm(data=request.POST)
         if form.is_valid():
-            answer = Answer.objects.create(text=form.cleaned_data['text'], fk_profile=request.user.profile,
-                                           fk_question=the_question)
+            form.save({'user': request.user, 'question': the_question, })
+            # redirect
             answers_list = Paginator(Answer.objects.get_by_question_id(qid), 5)
             needed_page = iterators.end_index()
             for i in range(1, answers_list.num_pages + 1):
-                if answer in answers_list.page(i).object_list:
+                if form.instance in answers_list.page(i).object_list:
                     needed_page = i
                     break
             return redirect(reverse('question', args=[the_question.pk]) + '?page=' + str(needed_page) + '#answer-'
-                            + str(answer.pk))
+                            + str(form.instance.pk))
 
     return render(request, "question.html", {'BestTags': Tag.objects.get_popular(6),
                                              'BestUsers': Profile.objects.get_best(6),

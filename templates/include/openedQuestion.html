@@ -3,7 +3,7 @@
 <div class="row mt-4 opened-question">
     <div class="col-3">
         <img class="avatar-opened-question"
-                     src="{% if request.user.profile.userPfp != '' %}{{ request.user.profile.userPfp.url }}{% else %}{% static "img/no-avatar.png" %}{% endif %}"
+                     src="{% if question.fk_profile.userPfp != '' %}{{ question.fk_profile.userPfp.url }}{% else %}{% static "img/no-avatar.png" %}{% endif %}"
                      alt="avatar">
         <div class="row-3 rating-box">
             <div class="rating">{{ question.rating }}</div>
