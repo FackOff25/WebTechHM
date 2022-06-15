@@ -51,7 +51,7 @@ def signup(request):
     if request.method == 'GET':
         form = SignupForm()
     else:
-        form = SignupForm(data=request.POST)
+        form = SignupForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             try:
                 form.save()
