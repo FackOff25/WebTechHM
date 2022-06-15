@@ -188,7 +188,12 @@ class QuestionRatingMarkManager(models.Manager):
             post_save.send(i.__class__, instance=i, created=True)
 
     def get_vote(self, question_id, profile_id):
-        return QuestionRatingMark.votes[self.filter(fk_question=question_id, fk_profile=profile_id).all()[0].vote][1]
+        votes = {0: 'none', 1: 'up', -1: 'down'}
+        mark = self.all().filter(fk_question=question_id, fk_profile=profile_id)
+        if mark:
+            return votes[mark[0].vote]
+        else:
+            return votes[0]
 
 
 class QuestionRatingMark(models.Model):
@@ -207,10 +212,6 @@ class QuestionRatingMark(models.Model):
         verbose_name_plural = 'Q-VoteMarks'
         unique_together = ['fk_profile', 'fk_question']
 
-    def update_rating(self):
-        self.fk_question.rating += self.vote
-        self.fk_question.save()
-
 
 def create_question_rating_mark(sender, instance, created, **kwargs):
     if created:
@@ -228,7 +229,12 @@ class AnswerRatingMarkManager(models.Manager):
             post_save.send(i.__class__, instance=i, created=True)
 
     def get_vote(self, answer_id, profile_id):
-        return AnswerRatingMark.votes[self.filter(fk_answer=answer_id, fk_profile=profile_id).all()[0].vote][1]
+        votes = {0: 'none', 1: 'up', -1: 'down'}
+        mark = self.all().filter(fk_question=answer_id, fk_profile=profile_id)
+        if mark:
+            return votes[mark[0].vote]
+        else:
+            return votes[0]
 
 
 class AnswerRatingMark(models.Model):

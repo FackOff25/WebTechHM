@@ -10,11 +10,13 @@
     {% for question in iterators %}
         {% include "include/question.html" %}
     {% endfor %}
-
     {% include "include/paginator.html" %}
 {% endblock %}
 
 {% block side-panel %}
     {% include "include/sidepanel.html" %}
-{% endblock %}
+{% endblock %}}
 
+{% block scripts %}
+    <script src="{% static "js/likes.js" %}"></script>
+{% endblock %}

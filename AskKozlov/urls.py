@@ -30,7 +30,8 @@ urlpatterns = [
     path('logout/', views.logout, name="log out"),
     path('settings/', views.settings, name="settings"),
     path('ask/', views.ask, name="new question"),
-    path('question/<int:qid>/', views.question, name="question")
+    path('question/<int:qid>/', views.question, name="question"),
+    path('vote_question/', views.vote_question, name="vote question")
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])\
               + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

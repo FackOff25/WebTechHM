@@ -1,15 +1,14 @@
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.forms.models import model_to_dict
+from django.http.response import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.urls import reverse
 
-from django.contrib.auth.models import User
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods, require_POST
 
-from AskKozlovApp.models import Profile, Question, Answer, Tag
+from AskKozlovApp.models import Profile, Question, Answer, Tag, QuestionRatingMark
 from AskKozlovApp.forms import LoginForm, SignupForm, QuestionForm, SettingsForm, AnswerForm
 
 
@@ -167,3 +166,54 @@ def question(request, qid: int):
                                              'question': the_question,
                                              'iterators': iterators,
                                              'form': form, })
+
+
+@login_required()
+@require_POST
+def vote_question(request):
+    try:
+        question_id = request.POST['question_id']
+        type = request.POST['type']
+    except:
+        return HttpResponseBadRequest()
+
+    ques = Question.objects.get_question_by_id(question_id)
+    try:
+        mark = QuestionRatingMark.objects.get(fk_question=ques, fk_profile=request.user.profile)
+    except:
+        mark = None
+
+    if mark is not None:
+        if type == "up":
+            if mark.vote == 0:
+                ques.rating += 1
+                mark.vote = 1
+            elif mark.vote == -1:
+                ques.rating += 2
+                mark.vote = 1
+            else:
+                ques.rating -= 1
+                mark.vote = 0
+        elif type == 'down':
+            if mark.vote == 0:
+                ques.rating -= 1
+                mark.vote = -1
+            elif mark.vote == 1:
+                ques.rating -= 2
+                mark.vote = -1
+            else:
+                ques.rating += 1
+                mark.vote = 0
+        else:
+            return HttpResponseBadRequest()
+        mark.save()
+        ques.save()
+    else:
+        if type == "up":
+            mark = QuestionRatingMark.objects.create(vote=1, fk_question=ques, fk_profile=request.user.profile)
+        elif type == 'down':
+            mark = QuestionRatingMark.objects.create(vote=-1, fk_question=ques, fk_profile=request.user.profile)
+        else:
+            return HttpResponseBadRequest()
+
+    return JsonResponse({'new_rating': ques.rating, 'new_state': mark.vote})
