@@ -135,6 +135,10 @@ $(document).ready(function () {
                 alert("You must be authorized to vote");
                 return
             }
+            if (response.status === 403){
+                alert("Its not your question, you are not supposed to say what is correct");
+                return
+            }
             $this.css("display", "none");
         })
     });

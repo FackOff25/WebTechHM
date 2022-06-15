@@ -2,7 +2,8 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
-from django.http.response import JsonResponse, HttpResponseBadRequest, HttpResponse, HttpResponseNotFound
+from django.http.response import JsonResponse, HttpResponseBadRequest, HttpResponse, HttpResponseNotFound, \
+    HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.urls import reverse
@@ -221,6 +222,7 @@ def vote_question(request):
 
     return JsonResponse({'new_rating': ques.rating, 'new_state': mark.vote})
 
+
 @require_POST
 def vote_answer(request):
 
@@ -281,7 +283,6 @@ def vote_answer(request):
 
 @require_POST
 def submit_correction(request):
-    print(request.POST)
     if not request.user.is_authenticated:
         return HttpResponse('Unauthorized', status=401)
 
@@ -302,6 +303,9 @@ def submit_correction(request):
         ans = Answer.objects.get(pk=answer_id)
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
+
+    if ans.fk_question.fk_profile != request.user.profile:
+        return HttpResponseForbidden()
 
     ans.marked_correct = correction
     ans.save()
