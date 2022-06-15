@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from AskKozlovApp import views
+from AskKozlov import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls, name="admin"),
@@ -29,4 +31,7 @@ urlpatterns = [
     path('settings/', views.settings, name="settings"),
     path('ask/', views.ask, name="new question"),
     path('question/<int:qid>/', views.question, name="question")
-]
+] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])\
+              + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+

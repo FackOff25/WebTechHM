@@ -40,6 +40,10 @@ class QuestionForm(forms.ModelForm):
         model = Question
         fields = ['title', 'text', 'tags']
 
+    def save(self, *args, **kwargs):
+        self.instance = Question.objects.create(title=self.cleaned_data['title'], fk_profile=args[0]['user'].profile)
+        self.instance.fk_tags.set(self.cleaned_data['tags'])
+
 
 class AnswerForm(forms.ModelForm):
     text = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Enter an answer',
@@ -56,6 +60,19 @@ class SettingsForm(forms.ModelForm):
     nickname = forms.CharField(label='Nickname', required=False)
     user_pfp = forms.ImageField(label='Avatar', required=False)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # with just disabled=True form fails validation
+        self.fields['login'].widget.attrs['readonly'] = True
+
     class Meta:
         model = User
         fields = ['login', 'email', 'nickname', 'user_pfp']
+
+    def save(self, *args, **kwargs):
+        user = super().save()
+        profile = user.profile
+        profile.nickname = self.cleaned_data['nickname']
+        if self.cleaned_data['user_pfp']:
+            profile.userPfp = self.cleaned_data['user_pfp']
+        profile.save()

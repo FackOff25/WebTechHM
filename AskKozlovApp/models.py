@@ -19,7 +19,7 @@ class ProfileManager(models.Manager):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
     nickname = models.CharField(max_length=255, default=None, null=True)
-    userPfp = models.ImageField(max_length=255, default=None, null=True)
+    userPfp = models.ImageField(max_length=255, default=None, null=True, upload_to='avatar/%Y/%m/%d')
     objects = ProfileManager()
 
     def __str__(self):

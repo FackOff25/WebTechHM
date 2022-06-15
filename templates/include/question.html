@@ -2,9 +2,9 @@
 {% load check_vote %}
 <div class="row question">
     <div class="col-2">
-        <object class="avatar-question" data="{{ question.fk_profile.userPfp }}" type="image/jpg">
-            <img class="avatar-question" src="{% static "img/no-avatar.png" %}" alt="avatar">
-        </object>
+        <img class="avatar-question"
+                     src="{% if request.user.profile.userPfp != '' %}{{ request.user.profile.userPfp.url }}{% else %}{% static "img/no-avatar.png" %}{% endif %}"
+                     alt="avatar">
         <div class="row-1 rating-box">
             <div class="rating">{{ question.rating }}</div>
             <div class="col-2 btn-group-vertical">

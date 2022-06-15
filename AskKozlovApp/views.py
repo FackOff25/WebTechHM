@@ -1,11 +1,14 @@
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.forms.models import model_to_dict
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.urls import reverse
 
 from django.contrib.auth.models import User
+from django.views.decorators.http import require_http_methods
+
 from AskKozlovApp.models import Profile, Question, Answer, Tag
 from AskKozlovApp.forms import LoginForm, SignupForm, QuestionForm, SettingsForm, AnswerForm
 
@@ -43,6 +46,7 @@ def list_with_tags(request, tg):
                                         'header': tg})
 
 
+@require_http_methods(['GET', 'POST'])
 def signup(request):
     if request.method == 'GET':
         form = SignupForm()
@@ -71,6 +75,7 @@ def signup(request):
                                                  'form': form, })
 
 
+@require_http_methods(['GET', 'POST'])
 def login(request):
     form = LoginForm()
     if request.method == "POST":
@@ -99,26 +104,21 @@ def logout(request):
 
 
 @login_required()
+@require_http_methods(['GET', 'POST'])
 def settings(request):
     profile = Profile.objects.get(user=request.user)
     if request.method == 'POST':
-        form = SettingsForm(data=request.POST)
+        initial_data = request.POST.copy()
+        form = SettingsForm(data=initial_data, instance=request.user, files=request.FILES)
+        print(form.is_valid())
         if form.is_valid():
-            profile.nickname = form.cleaned_data['nickname']
-            profile.userPfp = form.cleaned_data['user_pfp']
-            profile.user.username = form.cleaned_data['login']
-            profile.user.email = form.cleaned_data['email']
-            profile.user.save()
-            profile.save()
-            return render(request, "settings.html", {'BestTags': Tag.objects.get_popular(6),
-                                                     'BestUsers': Profile.objects.get_best(6),
-                                                     'form': form, })
-        else:
-            form.add_error(None, 'General Error')
+            form.save()
+            return redirect(reverse('settings'))
 
     data = {'login': profile.user.username,
             'email': profile.user.email,
-            'nickname': profile.nickname, }
+            'nickname': profile.nickname,
+            'avatar': profile.userPfp}
     form = SettingsForm(data=data)
     return render(request, "settings.html", {'BestTags': Tag.objects.get_popular(6),
                                              'BestUsers': Profile.objects.get_best(6),
@@ -126,15 +126,14 @@ def settings(request):
 
 
 @login_required()
+@require_http_methods(['GET', 'POST'])
 def ask(request):
     request.session['continue'] = reverse('new question')
     if request.method == 'POST':
-        form = QuestionForm(data=request.POST)
+        form = QuestionForm(data=request.POST, instance=Question(request.POST))
         if form.is_valid():
-            new_question = Question.objects.create(title=form.cleaned_data['title'], fk_profile=request.user.profile)
-            new_question.fk_tags.set(form.cleaned_data['tags'])
-            new_question.save()
-            return redirect(reverse('question', args=[new_question.pk]))
+            form.save({'user': request.user, })
+            return redirect(reverse('question', args=[form.instance.pk]))
         else:
             return redirect(reverse('new questions'))
 
@@ -144,6 +143,7 @@ def ask(request):
                                                 'form': form, })
 
 
+@require_http_methods(['GET', 'POST'])
 def question(request, qid: int):
     the_question = Question.objects.get_question_by_id(qid)
     iterators = paginate(Answer.objects.get_by_question_id(qid), request, 5)
