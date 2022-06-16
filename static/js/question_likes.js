@@ -19,7 +19,7 @@ $(document).ready(function () {
 
     $("input.rate-button").click(function () {
         const $this = $(this)
-        let image_base = "/static/img/arrow-"
+        let image_base = "/img/arrow-"
 
         const request = new Request(
             '/vote_question/',

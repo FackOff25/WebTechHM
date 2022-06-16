@@ -3,7 +3,7 @@
 <div class="row mt-4 opened-question">
     <div class="col-3">
         <img class="avatar-opened-question"
-                     src="{% if question.fk_profile.userPfp != '' %}{% get_media_prefix %}{{ question.fk_profile.userPfp }}{% else %}{% static "img/no-avatar.png" %}{% endif %}"
+                     src="{% if question.fk_profile.userPfp != '' %}{% get_media_prefix %}{{ question.fk_profile.userPfp }}{% else %}/img/no-avatar.png{% endif %}"
                      alt="avatar">
         <div class="row-3 rating-box">
             <div class="rating">{{ question.rating }}</div>
@@ -13,19 +13,19 @@
                 <div class="col-2 btn-group-vertical rate-buttons">
                     {% with info=request.user.profile.pk %}
                         {% if question.pk|check_question_vote:info == "up" %}
-                            <input type="image" class="rate-button opened" src="{% static "img/arrow-up-pressed.png" %}"
+                            <input type="image" class="rate-button opened" src=/img/arrow-up-pressed.png"
                                    data-id="{{ question.pk }}" data-type="up" data-pressed="true">
-                            <input type="image" class="rate-button opened" src="{% static "img/arrow-down.png" %}"
+                            <input type="image" class="rate-button opened" src="/img/arrow-down.png"
                                    data-id="{{ question.pk }}" data-type="down" data-pressed="false">
                         {% elif question.pk|check_question_vote:info == "down" %}
-                            <input type="image" class="rate-button opened" src="{% static "img/arrow-up.png" %}"
+                            <input type="image" class="rate-button opened" src="/img/arrow-up.png"
                                    data-id="{{ question.pk }}" data-type="up" data-pressed="false">
-                            <input type="image" class="rate-button opened" src="{% static "img/arrow-down-pressed.png" %}"
+                            <input type="image" class="rate-button opened" src="/img/arrow-down-pressed.png"
                                    data-id="{{ question.pk }}" data-type="down" data-pressed="true">
                         {% else %}
-                            <input type="image" class="rate-button opened" src="{% static "img/arrow-up.png" %}"
+                            <input type="image" class="rate-button opened" src="/img/arrow-up.png"
                                    data-id="{{ question.pk }}" data-type="up" data-pressed="false">
-                            <input type="image" class="rate-button opened" src="{% static "img/arrow-down.png" %}"
+                            <input type="image" class="rate-button opened" src="/img/arrow-down.png"
                                    data-id="{{ question.pk }}" data-type="down" data-pressed="false">
                         {% endif %}
                     {% endwith %}

@@ -19,7 +19,7 @@ $(document).ready(function () {
 
     $("input.rate-button.answer-button").click(function () {
         const $this = $(this)
-        let image_base = "/static/img/arrow-"
+        let image_base = "/img/arrow-"
 
         const request = new Request(
             '/vote_answer/',
@@ -51,9 +51,7 @@ $(document).ready(function () {
                 image_base += ".png"
                 $this.attr('src', image_base)
                 const parent_box = parent.parent().parent()
-                console.log(parent_box)
                 const rating_box = $(parent_box.children("div.rating")[0])
-                console.log(rating_box)
                 rating_box.text(parsed.new_rating)
             });
         })
@@ -61,7 +59,7 @@ $(document).ready(function () {
 
     $("input.rate-button.opened").click(function () {
         const $this = $(this)
-        let image_base = "/static/img/arrow-"
+        let image_base = "/img/arrow-"
 
         const request = new Request(
             '/vote_question/',

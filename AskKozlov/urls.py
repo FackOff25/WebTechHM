@@ -34,5 +34,4 @@ urlpatterns = [
                   path('vote_question/', views.vote_question, name="vote question"),
                   path('vote_answer/', views.vote_answer, name="vote answer"),
                   path('submit_correction/', views.submit_correction, name="vote answer")
-              ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0]) \
-              + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+              ]
