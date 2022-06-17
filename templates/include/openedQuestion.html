@@ -13,7 +13,7 @@
                 <div class="col-2 btn-group-vertical rate-buttons">
                     {% with info=request.user.profile.pk %}
                         {% if question.pk|check_question_vote:info == "up" %}
-                            <input type="image" class="rate-button opened" src=/img/arrow-up-pressed.png"
+                            <input type="image" class="rate-button opened" src="/img/arrow-up-pressed.png"
                                    data-id="{{ question.pk }}" data-type="up" data-pressed="true">
                             <input type="image" class="rate-button opened" src="/img/arrow-down.png"
                                    data-id="{{ question.pk }}" data-type="down" data-pressed="false">
